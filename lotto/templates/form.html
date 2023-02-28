@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Getting Lotto Results</title>
+</head>
+<body>
+<h1>חיפוש תוצאות לוטו</h1>
+<form action="/lotto/" method="post">
+    {% csrf_token %}
+  <label for="fname">מספר הגרלה:</label><br>
+  <input type="text" id="number" placeholder="הקלד מספר הגרלה"><br>
+  <input type="submit" value="שלח">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+              $("form").submit(function (event) {
+                var formData = {
+                  lotto_number: $("#number").val(),
+                };
+                $.ajax({
+                  url: "/lotto/",
+                  type: "POST",
+                  data: formData,
+                  dataType: "json",
+                  encode: true,
+                    headers: {
+                    'X-CSRFToken': $("input[name=csrfmiddlewaretoken]").val()
+                            }
+                }).done(function (data) {
+                  var data = JSON.stringify(data);
+                  var obj = JSON.parse(data);
+                  $('#message').text(obj.results);
+                });
+                event.preventDefault();
+              });
+            });
+    </script>
+</form> 
+<p id="message"></p>
+</body>
+</html>
